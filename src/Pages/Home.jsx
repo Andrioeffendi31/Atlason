@@ -2,20 +2,24 @@ import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input";
 import { Flex, Stack, Text } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Countries from "../components/Countries";
 
 import { Button } from "@chakra-ui/button";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { FaChevronDown, FaSearch, FaSort } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { setSearchQuery } from "../actions/geolocations";
 
-const Home = ({ query, setQuery, region, setRegion, sort, setSort }) => {
+const Home = () => {
   const { data, isLoading } = useSelector((state) => state.geolocations);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { params } = useSelector((state) => state.geolocations);
+  const { query, region, sort } = params;
 
   const handleInputChange = (e) => {
-    setQuery(e.target.value);
+    dispatch(setSearchQuery({ ...params, query: e.target.value }));
   };
 
   const onEnterPress = (e) => {
@@ -29,15 +33,14 @@ const Home = ({ query, setQuery, region, setRegion, sort, setSort }) => {
   };
 
   const handleRegionChange = (e) => {
-    setRegion(e.target.value);
-    console.log(e.target.value);
+    dispatch(setSearchQuery({ ...params, region: e.target.value }));
   };
 
   const handleSortChange = (e) => {
     if (sort === "asc") {
-      setSort("desc");
+      dispatch(setSearchQuery({ ...params, sort: "desc" }));
     } else {
-      setSort("asc");
+      dispatch(setSearchQuery({ ...params, sort: "asc" }));
     }
   };
   return (

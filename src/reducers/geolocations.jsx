@@ -5,12 +5,18 @@ import {
   FETCH_DETAILS_FAILURE,
   FETCH_DETAILS_SUCCESS,
   FETCH_DETAILS,
+  SET_SEARCH_QUERY,
 } from "../constants/types";
 
 const initialState = {
   loading: false,
   data: [],
   countryDetails: {},
+  params: {
+    query: "",
+    region: "All",
+    sort: "asc",
+  },
   error: "",
 };
 
@@ -52,6 +58,11 @@ const reducer = (state = initialState, action) => {
         ...state,
         loading: false,
         error: action.payload,
+      };
+    case SET_SEARCH_QUERY:
+      return {
+        ...state,
+        params: action.payload,
       };
     default:
       return state;

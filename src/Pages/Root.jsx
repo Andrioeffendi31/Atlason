@@ -5,14 +5,21 @@ import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaSearch, FaSort } from "react-icons/fa";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useOutlet } from "react-router";
+import { setSearchQuery } from "../actions/geolocations";
 import { useIsMounted } from "../Hooks/useIsMounted";
 
-const Root = ({ query, setQuery, region, setRegion, sort, setSort }) => {
+const Root = () => {
   //Sticky Navbar
   const [fix, setFix] = useState(false);
   const isMounted = useIsMounted();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const { params } = useSelector((state) => state.geolocations);
+
+  const { query, region, sort } = params;
 
   const location = useLocation();
 
@@ -33,7 +40,7 @@ const Root = ({ query, setQuery, region, setRegion, sort, setSort }) => {
   }, [isMounted]);
 
   const handleInputChange = (e) => {
-    setQuery(e.target.value);
+    dispatch(setSearchQuery({ ...params, query: e.target.value }));
   };
 
   const onEnterPress = (e) => {
@@ -47,15 +54,14 @@ const Root = ({ query, setQuery, region, setRegion, sort, setSort }) => {
   };
 
   const handleRegionChange = (e) => {
-    setRegion(e.target.value);
-    console.log(e.target.value);
+    dispatch(setSearchQuery({ ...params, region: e.target.value }));
   };
 
   const handleSortChange = (e) => {
     if (sort === "asc") {
-      setSort("desc");
+      dispatch(setSearchQuery({ ...params, sort: "desc" }));
     } else {
-      setSort("asc");
+      dispatch(setSearchQuery({ ...params, sort: "asc" }));
     }
   };
 

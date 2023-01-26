@@ -6,6 +6,7 @@ import {
   FETCH_DETAILS,
   FETCH_DETAILS_SUCCESS,
   FETCH_DETAILS_FAILURE,
+  SET_SEARCH_QUERY,
 } from "../constants/types";
 
 export const fetchCountries = () => async (dispatch) => {
@@ -31,3 +32,8 @@ export const fetchDetails = (country) => async (dispatch) => {
     dispatch({ type: FETCH_DETAILS_FAILURE, payload: error.message });
   }
 };
+
+export const setSearchQuery = (params) => ({
+  type: SET_SEARCH_QUERY,
+  payload: params,
+});
