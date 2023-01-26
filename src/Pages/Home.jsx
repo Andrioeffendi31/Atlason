@@ -1,22 +1,31 @@
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input";
 import { Flex, Stack, Text } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 import Countries from "../components/Countries";
 
 import { Button } from "@chakra-ui/button";
 import { Player } from "@lottiefiles/react-lottie-player";
 import { FaChevronDown, FaSearch, FaSort } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
-const Home = () => {
+const Home = ({ query, setQuery, region, setRegion, sort, setSort }) => {
   const { data, isLoading } = useSelector((state) => state.geolocations);
-  const [query, setQuery] = useState("");
-  const [region, setRegion] = useState("All");
-  const [sort, setSort] = useState("asc");
+  const navigate = useNavigate();
 
   const handleInputChange = (e) => {
     setQuery(e.target.value);
+  };
+
+  const onEnterPress = (e) => {
+    if (e.keyCode === 13) {
+      if (query === "") {
+        navigate("/");
+      } else {
+        navigate(`/search/${query}`);
+      }
+    }
   };
 
   const handleRegionChange = (e) => {
@@ -74,7 +83,8 @@ const Home = () => {
             fontSize={16}
             fontWeight="medium"
             value={query}
-            onChange={handleInputChange}
+            onInput={handleInputChange}
+            onKeyDownCapture={onEnterPress}
           />
         </InputGroup>
         <Flex gap={2}>
@@ -101,11 +111,7 @@ const Home = () => {
         </Flex>
       </Flex>
 
-      <Countries
-        data={data}
-        isLoading={isLoading}
-        param={{ query, region, sort }}
-      />
+      <Countries data={data} isLoading={isLoading} param={{ region, sort }} />
     </Stack>
   );
 };

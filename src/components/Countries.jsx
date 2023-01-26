@@ -2,17 +2,18 @@ import { Image } from "@chakra-ui/image";
 import { Flex, Text, Wrap } from "@chakra-ui/layout";
 import { motion } from "framer-motion";
 import React from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 
 const Countries = ({ data, isLoading, param }) => {
-  const { query, region, sort } = param;
+  const { searchQuery } = useParams();
+  const { region, sort } = param;
   const navigate = useNavigate();
 
   let filteredCountries = data?.filter((country) => {
-    return (
-      country.name.common.toLowerCase().includes(query.toLowerCase()) &&
-      (region === "All" || country.region === region)
-    );
+    return searchQuery === undefined
+      ? region === "All" || country.region === region
+      : country.name.common.toLowerCase().includes(searchQuery.toLowerCase()) &&
+          (region === "All" || country.region === region);
   });
 
   filteredCountries = filteredCountries?.sort((a, b) => {
@@ -43,8 +44,6 @@ const Countries = ({ data, isLoading, param }) => {
             as={motion.div}
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 1 }}
-            animate={{ opacity: 1 }}
-            initial={{ opacity: 0 }}
             boxShadow="lg"
             cursor={"pointer"}
             onClick={() => navigate(`/country/${country.cca3}`)}>

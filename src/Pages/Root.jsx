@@ -2,15 +2,19 @@ import { Button } from "@chakra-ui/button";
 import { Input, InputGroup, InputLeftElement } from "@chakra-ui/input";
 import { Flex, Text } from "@chakra-ui/layout";
 import { Menu, MenuButton, MenuItem, MenuList } from "@chakra-ui/menu";
+import { AnimatePresence, motion } from "framer-motion";
 import React, { useEffect, useState } from "react";
 import { FaChevronDown, FaSearch, FaSort } from "react-icons/fa";
-import { Outlet } from "react-router";
+import { useLocation, useNavigate, useOutlet } from "react-router";
 import { useIsMounted } from "../Hooks/useIsMounted";
 
-const Root = () => {
+const Root = ({ query, setQuery, region, setRegion, sort, setSort }) => {
   //Sticky Navbar
   const [fix, setFix] = useState(false);
   const isMounted = useIsMounted();
+  const navigate = useNavigate();
+
+  const location = useLocation();
 
   useEffect(() => {
     function setFixed() {
@@ -27,6 +31,33 @@ const Root = () => {
       window.removeEventListener("scroll", setFixed);
     };
   }, [isMounted]);
+
+  const handleInputChange = (e) => {
+    setQuery(e.target.value);
+  };
+
+  const onEnterPress = (e) => {
+    if (e.keyCode === 13) {
+      if (query === "") {
+        navigate("/");
+      } else {
+        navigate(`/search/${query}`);
+      }
+    }
+  };
+
+  const handleRegionChange = (e) => {
+    setRegion(e.target.value);
+    console.log(e.target.value);
+  };
+
+  const handleSortChange = (e) => {
+    if (sort === "asc") {
+      setSort("desc");
+    } else {
+      setSort("asc");
+    }
+  };
 
   return (
     <Flex align="center" direction="column" w="100%" h="100%">
@@ -62,37 +93,53 @@ const Root = () => {
                 fontWeight="medium"
                 bg="frozen2"
                 variant={"ghost"}
+                value={query}
+                onInput={handleInputChange}
+                onKeyDownCapture={onEnterPress}
               />
             </InputGroup>
             <Flex gap={2}>
               <Menu>
-                <MenuButton
-                  as={Button}
-                  rightIcon={<FaChevronDown />}
-                  w="100%"
-                  bg="frozen2"
-                  variant={"ghost"}>
-                  All
+                <MenuButton as={Button} rightIcon={<FaChevronDown />} w="100%">
+                  {region}
                 </MenuButton>
-                <MenuList minW="0" w={"170px"}>
-                  <MenuItem>All</MenuItem>
-                  <MenuItem>Africa</MenuItem>
-                  <MenuItem>Americas</MenuItem>
-                  <MenuItem>Asia</MenuItem>
-                  <MenuItem>Europe</MenuItem>
-                  <MenuItem>Oceania</MenuItem>
+                <MenuList minW="0" w={"170px"} onClick={handleRegionChange}>
+                  <MenuItem value={"All"}>All</MenuItem>
+                  <MenuItem value={"Africa"}>Africa</MenuItem>
+                  <MenuItem value={"Americas"}>Americas</MenuItem>
+                  <MenuItem value={"Asia"}>Asia</MenuItem>
+                  <MenuItem value={"Europe"}>Europe</MenuItem>
+                  <MenuItem value={"Oceania"}>Oceania</MenuItem>
                 </MenuList>
               </Menu>
-              <Button bg={"frozen2"} variant={"ghost"}>
+              <Button
+                bg={"frozen2"}
+                variant={"ghost"}
+                onClick={handleSortChange}>
                 <FaSort />
               </Button>
             </Flex>
           </Flex>
         </Flex>
       </Flex>
-      <Outlet />
+      <AnimatePresence mode="popLayout">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, filter: "blur(10px)" }}
+          animate={{ opacity: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, filter: "blur(10px)" }}>
+          <AnimatedOutlet />
+        </motion.div>
+      </AnimatePresence>
     </Flex>
   );
+};
+
+const AnimatedOutlet = () => {
+  const o = useOutlet();
+  const [outlet] = useState(o);
+
+  return <>{outlet}</>;
 };
 
 export default Root;

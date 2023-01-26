@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/toast";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { fetchCountries } from "./actions/geolocations";
@@ -11,13 +11,50 @@ function App() {
   const dispatch = useDispatch();
   const toast = useToast();
   const { data, error } = useSelector((state) => state.geolocations);
+  const [query, setQuery] = useState("");
+  const [region, setRegion] = useState("All");
+  const [sort, setSort] = useState("asc");
 
   const router = createBrowserRouter([
     {
       path: "/",
-      element: <Root />,
+      element: (
+        <Root
+          query={query}
+          setQuery={setQuery}
+          region={region}
+          setRegion={setRegion}
+          sort={sort}
+          setSort={setSort}
+        />
+      ),
       children: [
-        { path: "/", element: <Home /> },
+        {
+          path: "/",
+          element: (
+            <Home
+              query={query}
+              setQuery={setQuery}
+              region={region}
+              setRegion={setRegion}
+              sort={sort}
+              setSort={setSort}
+            />
+          ),
+        },
+        {
+          path: "/search/:searchQuery",
+          element: (
+            <Home
+              query={query}
+              setQuery={setQuery}
+              region={region}
+              setRegion={setRegion}
+              sort={sort}
+              setSort={setSort}
+            />
+          ),
+        },
         { path: "/country/:country", element: <Detail /> },
       ],
     },

@@ -20,12 +20,14 @@ const Detail = () => {
 
   console.log(countryDetails);
 
+  window.scrollTo(0, 0);
+
   useEffect(() => {
     dispatch(fetchDetails(country));
   }, [dispatch, country]);
 
   return (
-    <Stack w={{ base: "90vw", xl: "78vw" }} mt={16} spacing={8}>
+    <Stack w={{ base: "90vw", xl: "78vw" }} my={16} spacing={8} h="100vh">
       <Button as={Link} to="/" w="100px" gap={2} pl={1}>
         <FaChevronLeft />
         Back
