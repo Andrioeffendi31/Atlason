@@ -29,7 +29,9 @@ const Countries = ({ data, isLoading, param }) => {
       spacing="30px"
       justify="center"
       px={{ base: "1rem", md: "0" }}
-      py={12}>
+      py={12}
+      data-cy="countires-list"
+    >
       {isLoading ? (
         <Text>Loading...</Text>
       ) : (

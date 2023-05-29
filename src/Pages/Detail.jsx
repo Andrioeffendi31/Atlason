@@ -28,7 +28,7 @@ const Detail = () => {
 
   return (
     <Stack w={{ base: "90vw", xl: "78vw" }} my={16} spacing={8} h="100vh">
-      <Button as={Link} to="/" w="100px" gap={2} pl={1}>
+      <Button as={Link} to="/" w="100px" gap={2} pl={1} data-cy={"back-button"}>
         <FaChevronLeft />
         Back
       </Button>
@@ -50,11 +50,11 @@ const Detail = () => {
           />
         </AspectRatio>
         <Stack w="100%" spacing={8}>
-          <Text fontSize="3xl" fontWeight="bold">
+          <Text fontSize="3xl" fontWeight="bold" data-cy="country-name">
             {countryDetails[0]?.name.common}
           </Text>
           <Wrap fontSize={"lg"} spacingX={"4rem"} spacingY={2}>
-            <Stack spacing={2}>
+            <Stack spacing={2} data-cy="country-info">
               <Flex gap={2}>
                 <Text fontWeight="semibold">Native Name:</Text>
                 <Text>
@@ -112,7 +112,7 @@ const Detail = () => {
               </Flex>
             </Stack>
           </Wrap>
-          <Flex gap={2} flexWrap="wrap" align={"center"} mt="6 !important">
+          <Flex gap={2} flexWrap="wrap" align={"center"} mt="6 !important" data-cy={"border-countries"}>
             <Text fontWeight="semibold">Border Countries:</Text>
             {countryDetails[0]?.borders !== undefined ? (
               countryDetails[0]?.borders.map((border) => (
